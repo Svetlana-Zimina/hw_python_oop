@@ -10,7 +10,7 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
-    massege: ClassVar[str] = (
+    MESSAGE: ClassVar[str] = (
         'Тип тренировки: {training_type}; '
         'Длительность: {duration:.3f} ч.; '
         'Дистанция: {distance:.3f} км; '
@@ -20,7 +20,7 @@ class InfoMessage:
 
     def get_message(self) -> str:
         """Возвращает строку сообщения."""
-        return self.massege.format(**asdict(self))
+        return self.MESSAGE.format(**asdict(self))
 
 
 class Training:
@@ -43,11 +43,11 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        return (self.action * self.LEN_STEP / self.M_IN_KM)
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return (self.get_distance() / self.duration)
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -98,7 +98,7 @@ class SportsWalking(Training):
         weight: float,
         height: float
     ) -> None:
-        """Дополнение атрибутов материнского класса."""
+        """Дополнение атрибутов родительского класса."""
         super().__init__(action, duration, weight)
         self.height = height
 
@@ -162,13 +162,9 @@ def read_package(workout_type: str, data: List[int]) -> Training:
         'RUN': Running,
         'WLK': SportsWalking
     }
+    if workout_type not in training_type.keys():
+        raise ValueError('Неизвестный вид тренировки')
     return training_type[workout_type](*data)
-    if (
-        training_type != 'SWM'
-        or training_type != 'RUN'
-        or training_type != 'WLK'
-    ):
-        raise KeyError('Неизвестный вид тренировки')
 
 
 def main(training: Training) -> None:
