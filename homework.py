@@ -157,14 +157,17 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_type: Dict[str, Type[Training]] = {
+    training_types: Dict[str, Type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
-    if workout_type not in training_type.keys():
-        raise ValueError('Неизвестный вид тренировки')
-    return training_type[workout_type](*data)
+    if workout_type not in training_types:
+        AVAILABLE_TRAINING_TYPES = ', '.join(training_types)
+        raise ValueError(f'Неизвестный вид тренировки. '
+                         f'Доступные виды тренировок: '
+                         f'{AVAILABLE_TRAINING_TYPES}')
+    return training_types[workout_type](*data)
 
 
 def main(training: Training) -> None:
